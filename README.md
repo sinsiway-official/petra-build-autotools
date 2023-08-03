@@ -12,7 +12,7 @@ $ cd /usr/local/petra_build_autotools
 $ sudo sh build_linux_x64_kernel_2.6.32.sh
 ```
 
-If you encounter any issues during the installation, please try cleaning up by running `sudo sh clear.sh`` and then attempt the installation again.
+If you encounter any issues during the installation, please try cleaning up by running `sudo sh clear.sh` and then attempt the installation again.
 
 ## Post-Installation Steps
 
