@@ -10,6 +10,9 @@ petra_tools_binary_dir=$petra_tools_home/bin
 petra_tools_library_dir=$petra_tools_home/lib
 petra_tools_share_dir=$petra_tools_home/share
 
+PATH=$petra_tools_binary_dir:$PATH
+export PATH
+
 
 [[ ! -d $petra_tools_source_dir ]] && mkdir $petra_tools_source_dir
 [[ ! -d $petra_tools_install_dir ]] && mkdir $petra_tools_install_dir
@@ -45,7 +48,7 @@ install_package_m4(){
     cd $petra_tools_source_dir/$package_name
     
     # m4 configure
-    configure --prefix=$petra_tools_install_dir/$package_name
+    ./configure --prefix=$petra_tools_install_dir/$package_name
     
     make
     make install
@@ -67,24 +70,24 @@ install_package_m4(){
 }
 
 #
-# Install automake tools
+# Install autoconf tools
 #
-install_package_automake(){
+install_package_autoconf(){
     cd $petra_tools_home
     
-    local package_version=1.16.1
-    local package_name=automake-$package_version
-    # http://ftp.vim.org/ftp/gnu/automake/automake-1.16.1.tar.gz
-    download_package $package_name http://ftp.vim.org/ftp/gnu/automake/automake-$package_version.tar.gz
+    local package_version=2.69
+    local package_name=autoconf-$package_version
+    # https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
+    download_package $package_name https://ftp.gnu.org/gnu/autoconf/autoconf-$package_version.tar.gz
     cd $petra_tools_source_dir/$package_name
     
     # m4 configure
-    configure --prefix=$petra_tools_install_dir/$package_name
+    ./configure --prefix=$petra_tools_install_dir/$package_name
     
     make
     make install
 
-    bin_file_list="automake aclocal"
+    bin_file_list="autoconf autoreconf autoheader autom4te"
 
     for bin_file in $bin_file_list; do
         if [ ! -f "$petra_tools_install_dir/$package_name/bin/$bin_file" ]; then
@@ -100,26 +103,25 @@ install_package_automake(){
     return 0
 }
 
-# autoconf-2.69.tar.gz
 #
-# Install autoconf tools
+# Install automake tools
 #
-install_package_autoconf(){
+install_package_automake(){
     cd $petra_tools_home
     
-    local package_version=2.69
-    local package_name=autoconf-$package_version
-    # https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
-    download_package $package_name https://ftp.gnu.org/gnu/autoconf/autoconf-$package_version.tar.gz
+    local package_version=1.16.1
+    local package_name=automake-$package_version
+    # http://ftp.vim.org/ftp/gnu/automake/automake-1.16.1.tar.gz
+    download_package $package_name http://ftp.vim.org/ftp/gnu/automake/automake-$package_version.tar.gz
     cd $petra_tools_source_dir/$package_name
     
     # m4 configure
-    configure --prefix=$petra_tools_install_dir/$package_name
+    ./configure --prefix=$petra_tools_install_dir/$package_name
     
     make
     make install
 
-    bin_file_list="autoconf autoreconf autoheader autom4te"
+    bin_file_list="automake aclocal"
 
     for bin_file in $bin_file_list; do
         if [ ! -f "$petra_tools_install_dir/$package_name/bin/$bin_file" ]; then
@@ -148,7 +150,7 @@ install_package_libtool(){
     cd $petra_tools_source_dir/$package_name
     
     # m4 configure
-    configure --prefix=$petra_tools_install_dir/$package_name
+    ./configure --prefix=$petra_tools_install_dir/$package_name
     
     make
     make install
@@ -198,15 +200,16 @@ main(){
         echo "Error: Failed to install 'm4' tool."
         return 1
     fi
-    install_package_automake
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to install 'automake' tool."
-        return 1
-    fi
-    
+
     install_package_autoconf
     if [ $? -ne 0 ]; then
         echo "Error: Failed to install 'autoconf' tool."
+        return 1
+    fi
+
+    install_package_automake
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to install 'automake' tool."
         return 1
     fi
 
@@ -219,5 +222,4 @@ main(){
     print_guide
 }
 
-# main
-print_guide
+main
